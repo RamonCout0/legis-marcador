@@ -1,0 +1,72 @@
+{
+  "_ajuda": "Gabarito de EXEMPLO (dados ficticios). Para testar com suas sessoes reais, copie para data/fixtures/ref.json, ponha os vereadores e fases do seu Legis Videos e, em 'gt', o 'hash' do video e os marcadores ja feitos pela sua equipe.",
+  "deputados": [
+    {
+      "id": 1,
+      "nome": "Joao da Silva",
+      "ativo": true
+    },
+    {
+      "id": 2,
+      "nome": "Maria de Souza",
+      "ativo": true
+    },
+    {
+      "id": 3,
+      "nome": "Dr. Pedro Alves",
+      "ativo": true
+    }
+  ],
+  "fases": [
+    {
+      "id": 1,
+      "titulo": "Abertura"
+    },
+    {
+      "id": 2,
+      "titulo": "Mensagem Bíblica"
+    },
+    {
+      "id": 3,
+      "titulo": "Leitura da ata"
+    },
+    {
+      "id": 4,
+      "titulo": "Leitura de expediente"
+    },
+    {
+      "id": 5,
+      "titulo": "Uso da tribuna"
+    },
+    {
+      "id": 7,
+      "titulo": "Aparte"
+    },
+    {
+      "id": 8,
+      "titulo": "Em Discussão"
+    }
+  ],
+  "gt": {
+    "1": {
+      "hash": "HASH-DO-VIDEO-NO-SEU-SISTEMA",
+      "marcadores": [
+        {
+          "tempo": "00:00:27",
+          "fase": "Abertura",
+          "deputado": "Dr. Pedro Alves"
+        },
+        {
+          "tempo": "00:00:55",
+          "fase": "Mensagem Bíblica",
+          "deputado": "Maria de Souza"
+        },
+        {
+          "tempo": "00:01:22",
+          "fase": "Leitura da ata",
+          "deputado": "Joao da Silva"
+        }
+      ]
+    }
+  }
+}

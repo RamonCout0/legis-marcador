@@ -1,0 +1,10 @@
+fastapi>=0.110
+uvicorn>=0.29
+requests>=2.31
+rapidfuzz>=3.6
+faster-whisper>=1.0.3
+av>=11,<17
+
+# Opcional (so para usar a placa de video NVIDIA):
+#   pip install nvidia-cublas-cu12 nvidia-cudnn-cu12
+# Sem isso o programa roda normalmente no processador (CPU), so mais devagar.

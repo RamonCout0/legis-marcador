@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Legis Marcador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Teko:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Paleta do Legis Videos: topo #0a3d62, azul claro do logo #a2d8ff, azul de acao #2c83c1,
+   verde do Publicar #27ae60, laranja do "Em revisao" #f39c12, fundo #ebebeb, texto #444 */
+:root{
+  color-scheme:light;
+  --bg:#ebebeb; --card:#ffffff; --ink:#444444; --tit:#555555; --mut:#707070; --line:#dcdcdc; --linha-leve:#f2f3f3;
+  --pri:#2c83c1; --pri-esc:#1f6aa5; --pri-ink:#ffffff; --pri-soft:#e6f1fa; --head:#0a3d62; --head-luz:#a2d8ff;
+  --ok:#1e7e46; --ok-bg:#e6f6ec; --verde:#27ae60;
+  --warn:#8a5600; --warn-bg:#fdf1db; --warn-borda:#f39c12;
+  --info:#1f6aa5; --info-bg:#e6f1fa; --err:#c0392b; --err-bg:#fbe9e7; --cinza-bt:#e0e0e0; --ardosia:#7f8fa6;
+  --sombra:0 2px 2px rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12),0 1px 5px rgba(0,0,0,.2);
+}
+*{box-sizing:border-box}
+html{font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Roboto,system-ui,"Segoe UI",Arial,sans-serif;line-height:1.5;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--pri-esc)}
+:focus-visible{outline:3px solid var(--pri-esc);outline-offset:2px;border-radius:4px}
+[hidden]{display:none!important}
+
+/* topo (igual ao do Legis Videos: azul-marinho, "LEGIS" em azul claro, titulo em Teko) */
+.topo{background:var(--head);color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.topo .in{max-width:1100px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:42px;height:42px;display:grid;place-items:center;flex:none}
+.topo h1{font-family:Teko,Roboto,sans-serif;font-weight:600;font-size:2.1rem;letter-spacing:.5px;margin:0;line-height:.95;text-transform:uppercase}
+.topo h1 .l1{color:var(--head-luz)}
+.topo small{display:block;color:var(--head-luz);opacity:.9;font-size:.78rem;margin-top:2px}
+.topo .dir{margin-left:auto;display:flex;gap:8px;align-items:center}
+.topo button{background:transparent;color:var(--head-luz);border:1px solid var(--head-luz);border-radius:4px;min-height:40px;min-width:40px;padding:0 12px;font:inherit;font-weight:500;cursor:pointer}
+.topo button:hover{background:#ffffff1f}
+
+/* passos */
+.passos{max-width:1100px;margin:18px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap}
+.passo{flex:1 1 160px;display:flex;align-items:center;gap:10px;background:var(--card);border-bottom:4px solid transparent;border-radius:4px;box-shadow:var(--sombra);padding:10px 12px;color:var(--mut)}
+.passo b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--cinza-bt);color:var(--ink);flex:none;font-size:.9rem}
+.passo span{font-size:.88rem;line-height:1.2}
+.passo.ativo{border-bottom-color:var(--pri);color:var(--pri-esc);font-weight:500}
+.passo.ativo b{background:var(--pri);color:var(--pri-ink)}
+.passo.feito b{background:var(--verde);color:#fff}
+
+main{max-width:1100px;width:100%;margin:0 auto;padding:18px 20px 30px;flex:1}
+.card{background:var(--card);border-radius:4px;padding:22px;box-shadow:var(--sombra);margin-bottom:18px}
+h2{font-size:1.35rem;font-weight:500;color:var(--tit);margin:0 0 6px}
+.sub{color:var(--mut);margin:0 0 14px}
+
+/* botoes e campos (estilo Material, como no Legis Videos) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:4px;border:0;background:var(--pri);color:var(--pri-ink);font:inherit;font-size:.85rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;box-shadow:var(--sombra)}
+.btn:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.sec{background:var(--cinza-bt);color:var(--ink);box-shadow:var(--sombra)}
+.btn.verde{background:var(--verde);color:#fff}
+.btn.grande{min-height:54px;font-size:.95rem;padding:0 28px}
+.btn.peq{min-height:38px;padding:0 12px;font-size:.78rem}
+.btn.perigo{background:#fff;color:var(--err);box-shadow:inset 0 0 0 2px var(--err)}
+input[type=text],input[type=password],input[type=date],input[type=search],select{font:inherit;color:var(--ink);background:#fff;border:1px solid #bdbdbd;border-radius:4px;min-height:44px;padding:6px 12px;max-width:100%}
+input:focus,select:focus{border-color:var(--pri);box-shadow:0 0 0 2px var(--pri-soft)}
+label.campo{display:block;font-weight:500;margin-bottom:12px}
+label.campo input{display:block;width:100%;margin-top:4px}
+.msg{padding:12px 14px;border-radius:4px;margin:10px 0}
+.msg.erro{background:var(--err-bg);color:var(--err)} .msg.ok{background:var(--ok-bg);color:var(--ok)} .msg.info{background:var(--info-bg);color:var(--info)} .msg.aviso{background:var(--warn-bg);color:var(--warn)}
+
+/* login */
+.login{max-width:480px;margin:20px auto}
+.senha{display:flex;gap:8px} .senha input{flex:1}
+
+/* filtros */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+.chip{border:1px solid #bdbdbd;background:#fff;color:var(--ink);border-radius:999px;min-height:42px;padding:0 16px;font:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.chip .n{background:var(--linha-leve);border-radius:999px;padding:0 9px;font-size:.85rem;min-width:28px;text-align:center}
+.chip.on{border-color:var(--pri);background:var(--pri);color:#fff;font-weight:500}
+.chip.on .n{background:#ffffff33;color:#fff}
+.periodo{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px}
+.periodo label{font-size:.85rem;font-weight:500;color:var(--mut);display:flex;flex-direction:column;gap:2px}
+.rapidos{display:flex;gap:6px;flex-wrap:wrap}
+.prog{height:8px;background:var(--cinza-bt);border-radius:99px;overflow:hidden;margin:8px 0}
+.prog i{display:block;height:100%;width:0;background:var(--pri);transition:width .4s}
+
+/* sessoes */
+.sessao{display:flex;gap:16px;align-items:center;border-bottom:1px solid var(--line);padding:12px 8px;background:var(--card);flex-wrap:wrap}
+.sessao:nth-child(even){background:var(--linha-leve)}
+.sessao:hover{background:var(--pri-soft)}
+.sessao .data{width:78px;text-align:center;flex:none;background:var(--head);color:#fff;border-radius:4px;padding:6px 4px;line-height:1.1}
+.sessao .data b{display:block;font-size:1.6rem;font-family:Teko,Roboto,sans-serif;font-weight:600}.sessao .data span{font-size:.75rem;text-transform:uppercase;color:var(--head-luz)}
+.sessao .info{flex:1 1 220px}
+.sessao h3{margin:0;font-size:1.05rem;font-weight:500;color:var(--tit)}
+.sessao .acoes{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{display:inline-block;border-radius:24px;padding:2px 12px;font-size:.85rem;font-weight:500;margin-top:4px}
+.b-marcar{background:#e9edf2;color:#44546a} .b-publicar{background:var(--warn-bg);color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn-borda)} .b-ok{background:var(--ok-bg);color:var(--ok)} .b-vf{background:var(--linha-leve);color:var(--mut)}
+.vazio{text-align:center;color:var(--mut);padding:26px 0}
+.barra{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 14px;color:var(--mut);font-size:.9rem}
+.barra label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.sel{width:24px;height:24px;flex:none;cursor:pointer;accent-color:var(--pri)}
+.b-job{background:var(--info-bg);color:var(--info)} .b-pronta{background:var(--ok-bg);color:var(--ok)} .b-falhou{background:var(--err-bg);color:var(--err)}
+.barra-sel{position:sticky;bottom:12px;z-index:5;background:var(--card);border-top:4px solid var(--pri);border-radius:4px;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 24px rgba(0,0,0,.28);margin-top:12px}
+.barra-sel span{flex:1 1 200px}
+
+/* revisao */
+.grade{display:grid;grid-template-columns:minmax(0,380px) 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.grade{grid-template-columns:1fr}}
+.player{position:sticky;top:10px}
+video{width:100%;border-radius:4px;background:#000;max-height:300px}
+.linha{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:4px;padding:10px 12px;margin-bottom:10px;display:grid;grid-template-columns:auto 124px minmax(0,1fr) auto auto;gap:8px;align-items:center;background:#fff}
+.linha .usar,.linha .t,.linha .fase,.linha .play,.linha .rm{grid-row:1}
+.linha .dep{grid-column:2/-1;grid-row:2}
+.linha .trecho{grid-row:3}
+@media(max-width:520px){.linha{grid-template-columns:auto 1fr auto auto}.linha .t{width:100%!important}.linha .fase{grid-column:1/-1;grid-row:2}.linha .dep{grid-column:1/-1;grid-row:3}.linha .trecho{grid-row:4}.linha .play,.linha .rm{grid-row:1}}
+.linha.atencao{border-color:var(--warn-borda);border-left-color:var(--warn-borda);background:var(--warn-bg)}
+.linha.tocando{border-left-color:var(--pri);background:var(--pri-soft)}
+.linha .usar{width:26px;height:26px;accent-color:var(--pri)}
+.linha .trecho{grid-column:2/-1;font-size:.82rem;color:var(--mut)}
+.linha .trecho summary{cursor:pointer}
+.tag{font-size:.75rem;border-radius:99px;padding:1px 8px;border:1px solid var(--line);color:var(--mut);margin-left:6px}
+.modo{border:1px solid var(--line);border-left:4px solid var(--pri);border-radius:4px;padding:12px;margin:12px 0;background:var(--linha-leve)}
+.modo label{display:block;margin:6px 0;cursor:pointer}
+.modo input{accent-color:var(--pri)}
+.final{text-align:center;padding:10px 0}
+.final .grande-ok{font-size:2.4rem}
+.ajuda{background:var(--info-bg);color:var(--ink);border-left:4px solid var(--pri);border-radius:4px;padding:12px 14px;margin-bottom:14px}
+
+footer{background:var(--head);color:var(--head-luz);text-align:center;padding:16px 20px;font-size:.9rem}
+footer b{color:#fff;font-weight:500}
+</style>
+</head>
+<body>
+
+<header class="topo"><div class="in">
+  <div class="logo" aria-hidden="true">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#a2d8ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+  </div>
+  <div><h1><span class="l1">Legis</span> Marcador</h1><small>Marca sozinho quem fala e quando, nas Sessões Ordinárias</small></div>
+  <div class="dir">
+    <button id="bMenos" title="Diminuir letras" aria-label="Diminuir o tamanho das letras">A−</button>
+    <button id="bMais" title="Aumentar letras" aria-label="Aumentar o tamanho das letras">A+</button>
+    <button id="bSair" hidden>Sair</button>
+  </div>
+</div></header>
+
+<nav class="passos" id="passos" aria-label="Etapas" hidden>
+  <div class="passo" data-p="1"><b>1</b><span>Escolher a sessão</span></div>
+  <div class="passo" data-p="2"><b>2</b><span>Conferir os marcadores</span></div>
+  <div class="passo" data-p="3"><b>3</b><span>Enviar ao Legis Vídeos</span></div>
+  <div class="passo" data-p="4"><b>4</b><span>Publicar no Legis Vídeos</span></div>
+</nav>
+
+<main>
+
+<!-- ENTRAR -->
+<section id="vLogin" class="card login">
+  <h2>Bem-vindo(a)!</h2>
+  <p class="sub">Entre com o <b>mesmo CPF e senha</b> que você usa no Legis Vídeos.</p>
+  <form id="fLogin" autocomplete="off">
+    <label class="campo">CPF
+      <input id="cpf" name="legis_cpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" autocomplete="off">
+    </label>
+    <label class="campo">Senha
+      <span class="senha"><input id="senha" name="legis_senha" type="password" autocomplete="new-password"><button type="button" class="btn sec peq" id="bVer">Mostrar</button></span>
+    </label>
+    <button class="btn grande" id="bLogin" type="submit" style="width:100%">Entrar</button>
+    <div id="loginMsg" class="msg erro" hidden role="alert"></div>
+  </form>
+  <p class="sub" style="margin:14px 0 0;font-size:.85rem">Sua senha vai só para o Legis Vídeos e não fica guardada neste computador.</p>
+</section>
+
+<!-- LISTA -->
+<section id="vLista" hidden>
+  <div class="card">
+    <h2>Escolha a sessão</h2>
+    <p class="sub">Clique em <b>Marcar</b> na sessão desejada. O programa assiste ao vídeo por você e sugere os marcadores.</p>
+
+    <div class="barra">
+      <button class="btn sec peq" id="bAtualizar" title="Conferir de novo no Legis Vídeos">↻ Atualizar agora</button>
+      <span id="atualizadoEm">A lista se atualiza sozinha.</span>
+      <label title="Usa o Ollama do seu computador para descobrir nomes que o Whisper escreveu errado"><input type="checkbox" id="iaChk"> Usar a IA do meu computador <small id="iaSt"></small></label>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Filtrar por situação"></div>
+
+    <div class="periodo">
+      <label>De <input type="date" id="de"></label>
+      <label>Até <input type="date" id="ate"></label>
+      <div class="rapidos">
+        <button class="btn sec peq" data-per="30">Últimos 30 dias</button>
+        <button class="btn sec peq" data-per="mes">Este mês</button>
+        <button class="btn sec peq" data-per="ano">Este ano</button>
+        <button class="btn sec peq" data-per="tudo">Todo o período</button>
+      </div>
+      <label style="flex:1 1 200px">Buscar <input type="search" id="busca" placeholder="Ex.: 117ª ou 05/11"></label>
+    </div>
+
+    <div id="verif" class="msg info" hidden>
+      <span id="verifTxt"></span>
+      <div class="prog"><i id="verifBar"></i></div>
+    </div>
+    <div id="listaSessoes"></div>
+    <div style="text-align:center"><button class="btn sec" id="bMaisSessoes" hidden>Mostrar mais sessões</button></div>
+    <div class="barra-sel" id="barraSel" hidden>
+      <span id="selTxt"></span>
+      <button class="btn" id="bPreparar">Preparar em segundo plano</button>
+      <button class="btn sec" id="bLimparSel">Limpar</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONFERIR -->
+<section id="vRev" hidden>
+  <p><button class="btn sec" id="bVoltar">← Voltar para a lista</button></p>
+  <div class="card">
+    <h2 id="revTitulo">Sessão</h2>
+    <div id="prog" hidden>
+      <p id="stage" style="font-size:1.1rem;margin:6px 0"></p>
+      <div class="prog"><i id="barI"></i></div>
+      <p class="sub" id="dica"></p>
+    </div>
+    <div id="revErro" class="msg erro" hidden role="alert"></div>
+
+    <div id="revGrid" class="grade" hidden>
+      <div class="player">
+        <video id="vid" controls preload="metadata"></video>
+        <label class="campo" style="margin-top:14px">Quem presidia a sessão? <span class="sub" style="font-weight:400">(vai na Abertura)</span>
+          <select id="pres"></select>
+        </label>
+      </div>
+      <div>
+        <div class="ajuda">👉 Clique em <b>▶</b> para ouvir cada momento. Corrija o que estiver errado. Linhas em <b style="color:var(--warn)">amarelo</b> precisam que você escolha o vereador. Desmarque a caixinha das que não quiser enviar.</div>
+        <div id="linhas"></div>
+        <button class="btn sec" id="bAdd">+ Adicionar marcador no ponto atual do vídeo</button>
+
+        <div id="existentes" class="modo" hidden>
+          <b id="exTit"></b>
+          <div id="exLista" class="sub" style="font-size:.85rem;margin:4px 0 8px"></div>
+          <label><input type="radio" name="modo" value="completar" checked> <b>Completar</b> — adiciona só o que está faltando e mantém os atuais</label>
+          <label><input type="radio" name="modo" value="substituir"> <b>Substituir</b> — coloca os novos e <u>remove os atuais</u> (fica uma cópia guardada)</label>
+        </div>
+
+        <div style="margin-top:18px"><button class="btn grande" id="bEnviar">Enviar para o Legis Vídeos</button></div>
+        <div id="envMsg" class="msg" hidden role="status"></div>
+        <p class="sub" style="font-size:.85rem">Os marcadores entram <b>sem ficar públicos</b>. Quem publica é você, no Legis Vídeos.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card final" id="vFinal" hidden>
+    <div class="grande-ok" aria-hidden="true">✅</div>
+    <h2>Marcadores enviados!</h2>
+    <p id="finalTxt"></p>
+    <p><b>Falta só uma coisa:</b> abrir o Legis Vídeos, conferir e clicar em <b>Publicar</b>.</p>
+    <p style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a class="btn grande verde" id="bAbrirLegis" target="_blank" rel="noopener">Abrir no Legis Vídeos</a>
+      <button class="btn grande" id="bProxima" hidden></button>
+      <button class="btn sec grande" id="bOutra">Escolher outra sessão</button>
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>Feito por <b>Ramon Couto</b>, com a colaboração do <b>Claude</b> (Anthropic).</footer>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const PRES_SEM_VER=['Abertura'];
+let REF={deputados:[],fases:[]}, SESS=[], ESTADO={itens:{},rodando:false,feitos:0,total:0,atualizado_em:null}, CUR=null, EXIST=[], TIMER=null, ESTT=null, JOBS={}, SEL=new Set(), OLLAMA=false, IA=true, JT=null;
+const F={status:'marcar',de:'',ate:'',q:'',limite:15};
+try{const f=JSON.parse(localStorage.getItem('lm_filtro')||'{}');if(f.status)F.status=f.status;if(f.de!==undefined)F.de=f.de;if(f.ate!==undefined)F.ate=f.ate;IA=localStorage.getItem('lm_ia')!=='0'}catch{}
+const guardaFiltro=()=>{try{localStorage.setItem('lm_filtro',JSON.stringify({status:F.status,de:F.de,ate:F.ate}))}catch{}};
+
+/* ---------- utilidades ---------- */
+const api=async(p,o={})=>{
+  const r=await fetch('/api/'+p,{headers:{'Content-Type':'application/json'},...o});
+  if(!r.ok){let m=r.statusText;try{m=(await r.json()).detail||m}catch{}
+    if(r.status===401&&p!=='login'){irLogin('Sua sessão terminou. Entre de novo.')} throw new Error(m)}
+  return r.json()};
+const sec=t=>{const[h,m,s]=t.split(':').map(Number);return h*3600+m*60+s};
+const fmt=s=>{s=Math.max(0,Math.round(s));return [s/3600|0,(s%3600)/60|0,s%60].map(x=>String(x).padStart(2,'0')).join(':')};
+const dataObj=s=>new Date(s+'T12:00:00');
+const dBR=s=>s.split('-').reverse().join('/');
+const dur=d=>{if(!d)return'';const[h,m]=d.split(':').map(Number);return h?`${h}h${String(m).padStart(2,'0')}min`:`${m} min`};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function tamanho(d){let v=parseFloat(getComputedStyle(document.documentElement).fontSize)+d;v=Math.min(26,Math.max(15,v));document.documentElement.style.fontSize=v+'px';try{localStorage.setItem('lm_fonte',v)}catch{}}
+try{const v=localStorage.getItem('lm_fonte');if(v)document.documentElement.style.fontSize=v+'px'}catch{}
+$('#bMais').onclick=()=>tamanho(2); $('#bMenos').onclick=()=>tamanho(-2);
+
+function ver(v){['vLogin','vLista','vRev'].forEach(x=>$('#'+x).hidden=x!==v);$('#passos').hidden=v==='vLogin';$('#bSair').hidden=v==='vLogin';window.scrollTo(0,0)}
+function passo(n){$$('.passo').forEach(p=>{const i=+p.dataset.p;p.classList.toggle('ativo',i===n);p.classList.toggle('feito',i<n)})}
+function msg(el,txt,tipo){el.hidden=!txt;el.textContent=txt||'';el.className='msg '+(tipo||'')}
+
+/* ---------- entrar / sair ---------- */
+$('#cpf').addEventListener('input',e=>{const d=e.target.value.replace(/\D/g,'').slice(0,11);
+  e.target.value=d.replace(/^(\d{3})(\d{0,3})(\d{0,3})(\d{0,2}).*/,(m,a,b,c,f)=>a+(b?'.'+b:'')+(c?'.'+c:'')+(f?'-'+f:''))});
+$('#bVer').onclick=()=>{const s=$('#senha');const m=s.type==='password';s.type=m?'text':'password';$('#bVer').textContent=m?'Esconder':'Mostrar'};
+$('#fLogin').onsubmit=async e=>{
+  e.preventDefault(); const l=$('#loginMsg'); msg(l,'');
+  const n=$('#cpf').value.replace(/\D/g,'').length;
+  if(n!==11){msg(l,`O CPF precisa ter 11 números (você digitou ${n}).`,'erro');return}
+  $('#bLogin').disabled=true; $('#bLogin').textContent='Entrando…';
+  try{await api('login',{method:'POST',body:JSON.stringify({cpf:$('#cpf').value,senha:$('#senha').value})});$('#senha').value='';await entrou()}
+  catch(err){msg(l,err.message==='Usuário não existe ou está inativo'?'Não encontrei este CPF no Legis Vídeos. Confira os números.':err.message,'erro')}
+  $('#bLogin').disabled=false; $('#bLogin').textContent='Entrar'};
+function irLogin(aviso){clearInterval(TIMER);clearInterval(ESTT);ver('vLogin');if(aviso){const l=$('#loginMsg');msg(l,aviso,'aviso')}}
+$('#bSair').onclick=async()=>{try{await api('sair',{method:'POST'})}catch{};irLogin()};
+
+async function entrou(){
+  ver('vLista'); passo(1);
+  const st=await api('status').catch(()=>({ollama:false})); OLLAMA=!!st.ollama;
+  $('#iaChk').checked=IA&&OLLAMA; $('#iaChk').disabled=!OLLAMA; $('#iaSt').textContent=OLLAMA?'(Ollama ligado)':'(Ollama desligado)';
+  $('#de').value=F.de; $('#ate').value=F.ate;
+  REF=await api('referencias'); SESS=await api('sessoes'); ESTADO={itens:{},rodando:true,feitos:0,total:SESS.length,atualizado_em:null};
+  render(); atualizarEstado(true); iniciarAuto();
+}
+/* confere de novo no Legis Vídeos; "completo" olha todas, senão só as que ainda não estão 100% publicadas */
+async function atualizarEstado(completo){
+  try{await api('estado/atualizar?completo='+(completo?'true':'false'),{method:'POST'})}catch{return}
+  clearInterval(ESTT);
+  ESTT=setInterval(async()=>{try{const e=await api('estado');ESTADO=e;render();if(!e.rodando){clearInterval(ESTT);ESTT=null}}catch{clearInterval(ESTT);ESTT=null}},1500);
+}
+function listaVisivel(){return !$('#vLista').hidden&&document.visibilityState==='visible'}
+function iniciarAuto(){
+  clearInterval(window.__auto);
+  window.__auto=setInterval(()=>{if(listaVisivel()&&!ESTADO.rodando)atualizarEstado(false)},60000);   // a cada 1 min, sozinha
+  clearInterval(JT); JT=setInterval(pollJobs,3000);
+}
+async function pollJobs(){
+  if(!listaVisivel())return;
+  try{const j=await api('jobs');const antes=JSON.stringify(JOBS);JOBS=j;if(JSON.stringify(j)!==antes)render()}catch{}
+}
+const reativar=()=>{if(listaVisivel()&&!ESTADO.rodando&&(!ESTADO.atualizado_em||Date.now()/1000-ESTADO.atualizado_em>15))atualizarEstado(false)};
+document.addEventListener('visibilitychange',reativar); window.addEventListener('focus',reativar);
+$('#bAtualizar').onclick=()=>atualizarEstado(true);
+$('#iaChk').onchange=e=>{IA=e.target.checked;try{localStorage.setItem('lm_ia',IA?'1':'0')}catch{}};
+
+/* ---------- lista de sessões ---------- */
+function situacao(id){const e=ESTADO.itens[id];if(!e)return'verificando';if(e.n===null)return'erro';if(e.n===0)return'marcar';return e.publicos===e.n?'publicada':'publicar'}
+function filtradasSemStatus(){
+  const q=F.q.trim().toLowerCase();
+  return SESS.filter(s=>(!F.de||s.data>=F.de)&&(!F.ate||s.data<=F.ate)&&(!q||(`${s.descricao||''} ${s.titulo} ${dBR(s.data)}`.toLowerCase().includes(q))))}
+function render(){
+  const base=filtradasSemStatus(), cont={marcar:0,publicar:0,publicada:0};
+  base.forEach(s=>{const k=situacao(s.id);if(cont[k]!==undefined)cont[k]++});
+  const chips=[['marcar','Precisa marcar',cont.marcar],['publicar','Falta publicar',cont.publicar],['publicada','Já publicadas',cont.publicada],['todas','Todas',base.length]];
+  $('#chips').innerHTML=chips.map(([k,t,n])=>`<button class="chip ${F.status===k?'on':''}" data-st="${k}" aria-pressed="${F.status===k}">${t} <span class="n">${n}</span></button>`).join('');
+  const lista=base.filter(s=>F.status==='todas'||situacao(s.id)===F.status);
+  const V=$('#verif'); V.hidden=!ESTADO.rodando;
+  if(ESTADO.rodando){$('#verifTxt').textContent=`Verificando a situação das sessões… ${ESTADO.feitos} de ${ESTADO.total}`;$('#verifBar').style.width=(ESTADO.total?100*ESTADO.feitos/ESTADO.total:0)+'%'}
+  const nome={marcar:'Sem marcadores',publicar:'Marcadores ainda não publicados',publicada:'Publicada',verificando:'Verificando…',erro:'Não consegui verificar'};
+  const cls={marcar:'b-marcar',publicar:'b-publicar',publicada:'b-ok',verificando:'b-vf',erro:'b-vf'};
+  $('#listaSessoes').innerHTML=lista.slice(0,F.limite).map(s=>{
+    const k=situacao(s.id),d=dataObj(s.data),e=ESTADO.itens[s.id],j=JOBS[s.id];
+    const txt=k==='publicar'?`${e.n-e.publicos} de ${e.n} marcadores não publicados`:nome[k];
+    let job='',botao=k==='marcar'?'Marcar':'Conferir / atualizar';
+    if(j){const p=Math.round(j.progress*100);
+      if(j.stage==='na fila')job='<span class="badge b-job">⏳ Na fila para preparar</span>';
+      else if(j.stage==='pronto'){job='<span class="badge b-pronta">✔ Pronta para conferir</span>';botao='Conferir agora'}
+      else if(j.stage==='erro')job='<span class="badge b-falhou">⚠ Falhou — abra e tente de novo</span>';
+      else{job=`<span class="badge b-job">⚙ Preparando… ${j.stage.startsWith('baix')?'baixando':j.stage.startsWith('transc')?'transcrevendo':'finalizando'} ${p}%</span>`;botao='Abrir e acompanhar'}}
+    return `<article class="sessao">
+      <input type="checkbox" class="sel" data-sel="${s.id}" ${SEL.has(s.id)?'checked':''} aria-label="Selecionar esta sessão para preparar em segundo plano" title="Selecionar para preparar em segundo plano">
+      <div class="data"><b>${String(d.getDate()).padStart(2,'0')}</b><span>${d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')} ${d.getFullYear()}</span></div>
+      <div class="info"><h3>${esc(s.descricao||s.titulo)}</h3>
+        <div class="sub" style="margin:0">${d.toLocaleDateString('pt-BR',{weekday:'long'})} · ${dur(s.duracao)}</div>
+        <span class="badge ${cls[k]}">${k==='publicada'?'✔ ':k==='marcar'?'● ':''}${txt}</span> ${job}</div>
+      <div class="acoes"><button class="btn" data-abrir="${s.id}">${botao}</button>
+        ${s.link?`<a href="${esc(s.link)}" target="_blank" rel="noopener noreferrer">Ver no Legis Vídeos</a>`:''}</div></article>`}).join('')
+    ||`<div class="vazio">${ESTADO.rodando?'Aguarde, estou verificando as sessões…':F.status==='marcar'?'🎉 Nenhuma sessão precisa ser marcada neste período.':'Nenhuma sessão encontrada com esses filtros.'}</div>`;
+  $('#bMaisSessoes').hidden=lista.length<=F.limite;
+  const n=SEL.size; $('#barraSel').hidden=!n; $('#selTxt').textContent=`${n} ${n>1?'sessões selecionadas':'sessão selecionada'}. O programa transcreve uma de cada vez, e você pode conferir as que ficarem prontas.`;
+  $('#atualizadoEm').textContent=ESTADO.atualizado_em?`Atualizado às ${new Date(ESTADO.atualizado_em*1000).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} — a lista se atualiza sozinha.`:'A lista se atualiza sozinha.';
+}
+$('#chips').onclick=e=>{const b=e.target.closest('[data-st]');if(b){F.status=b.dataset.st;F.limite=15;guardaFiltro();render()}};
+$('#listaSessoes').onclick=e=>{const b=e.target.closest('[data-abrir]');if(b)abrirSessao(+b.dataset.abrir)};
+$('#listaSessoes').onchange=e=>{const c=e.target.closest('[data-sel]');if(c){const id=+c.dataset.sel;c.checked?SEL.add(id):SEL.delete(id);render()}};
+$('#bLimparSel').onclick=()=>{SEL.clear();render()};
+$('#bPreparar').onclick=async()=>{const ids=[...SEL];try{await api('preparar',{method:'POST',body:JSON.stringify({ids,usar_ia:IA&&OLLAMA})});
+  SEL.clear();JOBS=await api('jobs');render()}catch(e){alert('Não consegui preparar: '+e.message)}};
+$('#bMaisSessoes').onclick=()=>{F.limite+=15;render()};
+$('#de').onchange=e=>{F.de=e.target.value;F.limite=15;guardaFiltro();render()}; $('#ate').onchange=e=>{F.ate=e.target.value;F.limite=15;guardaFiltro();render()};
+$('#busca').oninput=e=>{F.q=e.target.value;F.limite=15;render()};
+$$('[data-per]').forEach(b=>b.onclick=()=>{const hoje=new Date(),iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);let de='',ate='';
+  if(b.dataset.per==='30'){de=iso(new Date(hoje-30*864e5));ate=iso(hoje)}
+  if(b.dataset.per==='mes'){de=iso(new Date(hoje.getFullYear(),hoje.getMonth(),1));ate=iso(hoje)}
+  if(b.dataset.per==='ano'){de=hoje.getFullYear()+'-01-01';ate=iso(hoje)}
+  F.de=de;F.ate=ate;$('#de').value=de;$('#ate').value=ate;F.limite=15;guardaFiltro();render()});
+
+/* ---------- processar e conferir ---------- */
+$('#bVoltar').onclick=()=>{clearInterval(TIMER);ver('vLista');passo(1);render();atualizarEstado(false);pollJobs()};
+$('#bOutra').onclick=$('#bVoltar').onclick;
+async function abrirSessao(id){
+  CUR=SESS.find(s=>s.id===id); clearInterval(TIMER); ver('vRev'); passo(2);
+  $('#vFinal').hidden=true; $('#revGrid').hidden=true; msg($('#revErro'),''); msg($('#envMsg'),'');
+  $('#revTitulo').textContent=`${CUR.descricao||CUR.titulo} — ${dBR(CUR.data)}`;
+  $('#prog').hidden=false; $('#stage').textContent='Começando…'; $('#barI').style.width='0'; $('#dica').textContent='';
+  try{await api('processar/'+id+'?usar_ia='+(IA&&OLLAMA),{method:'POST'})}catch(e){msg($('#revErro'),e.message,'erro');return}
+  const t0=Date.now();
+  TIMER=setInterval(async()=>{
+    try{const j=await api('job/'+id), pct=Math.round(j.progress*100), min=Math.floor((Date.now()-t0)/60000);
+      const st=j.stage.startsWith('baix')?['Baixando o vídeo da sessão…',pct]:j.stage.startsWith('transc')?['Ouvindo o vídeo e escrevendo a fala…',pct]:j.stage==='identificando falas'?['Identificando quem falou e quando…',100]:[j.stage,pct];
+      $('#stage').textContent=`${st[0]} ${st[1]}%`; $('#barI').style.width=st[1]+'%';
+      $('#dica').textContent=j.stage.startsWith('transc')?`Isso pode levar vários minutos (já faz ${min} min). Pode deixar esta página aberta e fazer outra coisa.`:'';
+      if(j.stage==='erro'){clearInterval(TIMER);$('#prog').hidden=true;msg($('#revErro'),'Não consegui processar: '+j.error,'erro')}
+      if(j.stage==='pronto'){clearInterval(TIMER);$('#prog').hidden=true;mostra(j.markers);if(j.info&&j.info.aviso)msg($('#revErro'),j.info.aviso,'aviso')}
+    }catch{clearInterval(TIMER)}},1500);
+}
+const opts=(l,v,k,lab,vazio)=>`<option value="">${vazio}</option>`+l.map(x=>`<option value="${x[k]}" ${x[k]==v?'selected':''}>${esc(x[lab])}</option>`).join('');
+function mostra(ms){
+  $('#revGrid').hidden=false; $('#vid').src='/api/video/'+CUR.id;
+  $('#pres').innerHTML=opts(REF.deputados.filter(d=>d.ativo),'','id','nome','— escolher —');
+  $('#linhas').innerHTML=''; ms.forEach(addRow); marcaAtencao();
+  if(!ms.length)msg($('#revErro'),'Não identifiquei nenhuma fala. Você pode adicionar os marcadores à mão.','aviso');
+  EXIST=[]; $('#existentes').hidden=true;
+  api('sessoes/'+CUR.id+'/marcadores').then(l=>{EXIST=l;if(!l.length)return;
+    $('#exTit').textContent=`Este vídeo já tem ${l.length} ${l.length>1?'marcadores':'marcador'} no Legis Vídeos${l.some(x=>x.publico)?' (alguns já públicos)':''}.`;
+    $('#exLista').textContent=l.map(x=>`${x.tempo} ${x.fase}${x.deputado?' – '+x.deputado.trim():''}`).join(' · ');
+    $('#existentes').hidden=false}).catch(()=>{});
+}
+function addRow(m={tempo:'00:00:00',fase_id:'',deputado_id:'',origem:'manual',trecho:''}){
+  const d=document.createElement('div');d.className='linha';
+  const rot=m.origem==='revisar'?'escolher vereador':m.origem==='ia'?'nome sugerido pela IA — confira':m.origem;
+  d.innerHTML=`<input type="checkbox" class="usar" checked title="Enviar este marcador" aria-label="Enviar este marcador">
+   <input type="text" class="t" value="${m.tempo}" inputmode="numeric" aria-label="Tempo (horas:minutos:segundos)" style="width:118px">
+   <select class="fase" aria-label="Fase">${opts(REF.fases,m.fase_id,'id','titulo','— fase —')}</select>
+   <select class="dep" aria-label="Vereador">${opts(REF.deputados,m.deputado_id,'id','nome','— vereador —')}</select>
+   <button class="btn sec peq play" title="Ouvir este momento" aria-label="Ouvir este momento">▶</button>
+   <button class="btn perigo peq rm" title="Remover esta linha" aria-label="Remover esta linha">✕</button>
+   <div class="trecho">${m.origem==='retorno'?'Volta do orador depois do aparte. ':''}<span class="tag">${esc(rot)}</span>
+     ${m.trecho?`<details><summary>Ver o que foi dito</summary>…${esc(m.trecho)}…</details>`:''}</div>`;
+  $('#linhas').appendChild(d);
+}
+$('#linhas').addEventListener('click',e=>{const l=e.target.closest('.linha');if(!l)return;
+  if(e.target.closest('.play')){const v=$('#vid');v.currentTime=Math.max(0,sec(l.querySelector('.t').value)-2);v.play();$$('.linha').forEach(x=>x.classList.remove('tocando'));l.classList.add('tocando')}
+  if(e.target.closest('.rm')){l.remove()}});
+$('#linhas').addEventListener('change',marcaAtencao);
+$('#pres').onchange=()=>{$$('.linha').forEach(l=>{const f=REF.fases.find(x=>x.id==l.querySelector('.fase').value);if(f&&f.titulo==='Abertura')l.querySelector('.dep').value=$('#pres').value});marcaAtencao()};
+function marcaAtencao(){$$('.linha').forEach(l=>{const f=REF.fases.find(x=>x.id==l.querySelector('.fase').value);
+  l.classList.toggle('atencao',!l.querySelector('.dep').value)})}
+$('#bAdd').onclick=()=>{addRow({tempo:fmt($('#vid').currentTime||0),fase_id:'',deputado_id:'',origem:'manual',trecho:''});marcaAtencao()};
+
+/* ---------- enviar ---------- */
+$('#bEnviar').onclick=async()=>{
+  const ms=[];let semNome=0,ruim=false;
+  $$('.linha').forEach(l=>{if(!l.querySelector('.usar').checked)return;
+    const t=l.querySelector('.t').value.trim(),fid=+l.querySelector('.fase').value,dep=+l.querySelector('.dep').value||null,f=REF.fases.find(x=>x.id===fid);
+    if(!/^\d{1,2}:\d{2}:\d{2}$/.test(t)||!f){ruim=true;l.classList.add('atencao');return}
+    if(!dep)semNome++; ms.push({tempo:t.padStart(8,'0'),fase_id:fid,fase:f.titulo,deputado_id:dep})});
+  const E=$('#envMsg');
+  if(ruim){msg(E,'Há linhas sem fase ou com tempo inválido (use horas:minutos:segundos, ex.: 00:12:30). Corrija as linhas em amarelo.','erro');return}
+  if(!ms.length){msg(E,'Não há marcadores marcados para enviar.','aviso');return}
+  const modo=EXIST.length?document.querySelector('input[name=modo]:checked').value:'novo', data=dBR(CUR.data);
+  let txt=modo==='substituir'?`SUBSTITUIR: os ${EXIST.length} marcadores atuais da sessão de ${data} serão REMOVIDOS e ${ms.length} novos serão criados (sem ficar públicos).`+(EXIST.some(x=>x.publico)?'\n\nAtenção: há marcadores públicos; depois será preciso publicar de novo.':'')+'\n\nUma cópia dos antigos fica guardada no computador.'
+    :modo==='completar'?`Completar a sessão de ${data}: serão adicionados só os marcadores que ainda não existem (sem ficar públicos).`
+    :`Enviar ${ms.length} marcadores para a sessão de ${data}? (eles não ficam públicos)`;
+  if(semNome)txt+=`\n\n⚠ ${semNome} marcador(es) estão sem vereador.`;
+  if(!confirm(txt+'\n\nContinuar?'))return;
+  $('#bEnviar').disabled=true;$('#bEnviar').textContent='Enviando…';
+  try{const r=await api('sessoes/'+CUR.id+'/enviar',{method:'POST',body:JSON.stringify({marcadores:ms,modo})});
+    $('#revGrid').hidden=true; $('#vFinal').hidden=false; passo(4); $('#bAbrirLegis').hidden=!CUR.link; $('#bAbrirLegis').href=CUR.link||'#'; $('#bAbrirLegis').rel='noopener noreferrer';
+    $('#finalTxt').textContent=`${r.criados} marcadores criados`+(r.excluidos?`, ${r.excluidos} antigos removidos`:'')+(r.pulados?`, ${r.pulados} já existiam`:'')+'.'+(r.avisos&&r.avisos.length?' Atenção: '+r.avisos.join(' '):'');
+    ESTADO.itens[CUR.id]={n:r.criados+(modo==='completar'?EXIST.length:0),publicos:0}; window.scrollTo(0,0);
+    const prox=SESS.find(x=>x.id!==CUR.id&&situacao(x.id)==='marcar'&&(!F.de||x.data>=F.de)&&(!F.ate||x.data<=F.ate)), bp=$('#bProxima');
+    bp.hidden=!prox; if(prox){bp.textContent=`Marcar a próxima: ${prox.descricao||prox.titulo} (${dBR(prox.data).slice(0,5)})`;bp.onclick=()=>abrirSessao(prox.id)}}
+  catch(e){msg(E,e.message,'erro')}
+  $('#bEnviar').disabled=false;$('#bEnviar').textContent='Enviar para o Legis Vídeos'};
+
+/* ---------- início ---------- */
+api('status').then(s=>{
+  if(!s.configurado){msg($('#loginMsg'),'Falta configurar o endereço do Legis Vídeos: copie o arquivo .env.exemplo para .env e preencha (veja o README).','aviso');$('#bLogin').disabled=true;return}
+  if(s.logado)entrou()}).catch(()=>{});
+</script>
+</body>
+</html>

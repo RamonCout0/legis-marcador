@@ -1,0 +1,7 @@
+{
+  "_ajuda": "Copie para apelidos.json. Chave = como a transcricao costuma escrever o nome; valor = numero (id) do vereador no seu Legis Videos.",
+  "joao da silva": 1,
+  "joan da silva": 1,
+  "maria de souza": 2,
+  "marya de souza": 2
+}

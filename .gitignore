@@ -1,0 +1,26 @@
+# Ambiente Python (cada PC cria o seu com o iniciar.bat)
+.venv/
+__pycache__/
+*.pyc
+
+# Dados gerados durante o uso (grandes ou regeneraveis)
+data/videos/
+data/transcripts/
+data/backups/
+data/*.log
+data/*.err
+data/cache_referencias.json
+data/avaliacao_*.txt
+data/transc_*.txt
+data/ia_*.txt
+
+# Editor / sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Dados da instituicao (enderecos, vereadores, gabaritos): ficam so neste computador
+.env
+data/apelidos.json
+data/fixtures/
